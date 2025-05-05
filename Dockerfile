@@ -5,9 +5,8 @@ FROM python:3.11-bullseye
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
 
-# Instalar dependências do sistema operacional listadas como ausentes
+# Instalar dependências do sistema operacional listadas como ausentes para Playwright
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    # Bibliotecas listadas no log de erro do Playwright (corrigido)
     libglib2.0-0 \
     libnss3 \
     libnspr4 \
@@ -38,8 +37,10 @@ WORKDIR /app
 # Copiar o arquivo de dependências
 COPY requirements.txt .
 
-# Instalar dependências do Python e o navegador Playwright (sem install-deps agora)
-RUN pip install --no-cache-dir -r requirements.txt \
+# Instalar uma versão recente do SQLite via pip ANTES do chromadb
+# e depois instalar o restante das dependências Python e o navegador Playwright
+RUN pip install --no-cache-dir pysqlite3-binary \
+    && pip install --no-cache-dir -r requirements.txt \
     && playwright install chromium
 
 # Copiar o restante do código
