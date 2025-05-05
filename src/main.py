@@ -1,4 +1,14 @@
 # -*- coding: utf-8 -*-
+# Patch para forçar o uso do pysqlite3 (MOVIDO PARA O TOPO)
+try:
+    __import__("pysqlite3")
+    import sys
+    sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
+    print("INFO: Successfully patched sqlite3 with pysqlite3 in main.py")
+except ImportError:
+    print("WARNING: pysqlite3 not found in main.py, using system default sqlite3.")
+# --- Fim do Patch ---
+
 import sys
 import os
 # Ensure src directory is in path - DO NOT CHANGE
@@ -8,6 +18,7 @@ from flask import Flask, request, jsonify, render_template
 import logging
 
 # Import verification functions (Corrected Imports for v5)
+# O patch já deve ter sido executado antes desta linha
 from src.verifications import (
     run_verification_tasks, 
     extract_facebook_ads, 
@@ -209,7 +220,6 @@ def verify_google_ads_route():
     logger.info(f"Individual verification result for Google {domain}: {status}")
     return jsonify({"status": status, "message": message})
 
-
 @app.route("/api/verify/qsa", methods=["POST"])
 def verify_qsa_route():
     data = request.json
@@ -229,6 +239,7 @@ def verify_qsa_route():
         qsa_data_simplified = {
             "razao_social": qsa_result.get("razao_social", "N/A"),
             "situacao": qsa_result.get("situacao", "N/A"),
+            # Corrigido: Usar aspas simples dentro da f-string
             "socios": [f"{s.get('nome', '?')} ({s.get('qual', '?')})" for s in qsa_result.get("qsa", [])]
         }
     elif "inválido" in message.lower() or "não encontrado" in message.lower():
@@ -283,4 +294,5 @@ def qualify_lead():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5001))
     app.run(host="0.0.0.0", port=port, debug=True)
+
 
