@@ -7,9 +7,8 @@ ENV PYTHONUNBUFFERED=1
 
 # Instalar dependências do sistema operacional listadas como ausentes
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    # Bibliotecas listadas no log de erro do Playwright
+    # Bibliotecas listadas no log de erro do Playwright (corrigido)
     libglib2.0-0 \
-    libgobject-2.0-0 \
     libnss3 \
     libnspr4 \
     libdbus-1-3 \
