@@ -1,13 +1,3 @@
-# -*- coding: utf-8 -*-
-# Patch para forçar o uso do pysqlite3 (MOVIDO PARA O TOPO)
-try:
-    __import__("pysqlite3")
-    import sys
-    sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
-    print("INFO: Successfully patched sqlite3 with pysqlite3 in main.py")
-except ImportError:
-    print("WARNING: pysqlite3 not found in main.py, using system default sqlite3.")
-# --- Fim do Patch ---
 
 import sys
 import os
