@@ -12,4 +12,5 @@ pysqlite3-binary # Required for ChromaDB SQLite compatibility
 
 # Browser Automation (New)
 selenium
+webdriver-manager
 
