@@ -1,0 +1,15 @@
+# Web Framework & Server
+Flask
+gunicorn
+
+# HTTP Requests & Environment
+requests
+python-dotenv
+
+# AI Analysis (CrewAI & Dependencies)
+crewai[tools]
+pysqlite3-binary # Required for ChromaDB SQLite compatibility
+
+# Browser Automation (New)
+selenium
+
