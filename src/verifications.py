@@ -12,6 +12,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, WebDriverException
 # Consider webdriver_manager if chromedriver is not installed globally
 # from webdriver_manager.chrome import ChromeDriverManager # Needs installation
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
+
 
 from crewai import Agent, Task, Crew
 import requests
@@ -35,26 +38,22 @@ else:
 # --- Funções de Extração (Modificadas para Selenium) ---
 
 def setup_selenium_driver():
-    """Configura e retorna uma instância do WebDriver do Selenium."""
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Executar em modo headless
-    options.add_argument("--no-sandbox") # Necessário para rodar como root/em container
-    options.add_argument("--disable-dev-shm-usage") # Supera limitações de recursos
-    options.add_argument("--disable-gpu") # Desabilitar GPU (geralmente recomendado em headless)
-    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36") # User agent comum
-    options.add_argument("--window-size=1920,1080") # Definir tamanho da janela pode ajudar
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
 
-    # Tenta usar chromedriver no PATH
     try:
-        # Assume que chromedriver está no PATH
-        # Se precisar instalar: sudo apt-get update && sudo apt-get install -y chromium-chromedriver
-        service = ChromeService() 
+        # Usa webdriver-manager para instalar o chromedriver automaticamente
+        service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=options)
-        logger.info("WebDriver do Selenium inicializado com sucesso.")
         return driver
     except Exception as e:
-        logger.error(f"Erro ao configurar o WebDriver do Selenium: {e}. Verifique se o chromedriver está instalado e no PATH.")
-        raise RuntimeError(f"Falha ao inicializar o Selenium WebDriver: {e}")
+        raise RuntimeError(f"Falha ao inicializar o Selenium WebDriver com webdriver-manager: {e}")
+
 
 
 def extract_facebook_ads(instagram_username):
