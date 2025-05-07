@@ -11,8 +11,11 @@ crewai[tools]
 pysqlite3-binary # Required for ChromaDB SQLite compatibility
 
 # Browser Automation (New)
-playwright
-playwright-stealth
+crawl4ai>=0.1.6
+crewai>=0.27.8
+python-dotenv
+requests
+
 
 
 
